@@ -24,6 +24,7 @@ context.tasks = taskList;
 context.currentDate = new Date;
 //populate lastDate
 context.lastDate = context.currentDate
+context.clock = document.getElementById("clock");
 
 
 function createTask(task) {
@@ -108,7 +109,20 @@ function update(){
   }
 }
 
+function clock(){
+  context.currentDate = new Date();
+  context.clock.textContent = context.currentDate.toLocaleTimeString();
+  if (context.currentDate.getDay()!= context.lastDate.getDay()) {
+    context.lastDate = context.currentDate;
+    resetTasks();
+  }
+}
+
+
 //populate HTML
 for (let each in context.tasks) {
   createTask(context.tasks[each]);
 }
+
+//update current date every second
+setInterval(clock,1000);
