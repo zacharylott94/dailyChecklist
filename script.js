@@ -28,6 +28,19 @@ function updateList(){
       updateList();
       console.log("Now", task.state)
     };
+    
+    //entire block was borrowed, may need to trash it all
+    del.onclick = () =>{
+      //grab the index of the task
+      let index = context.tasks.indexOf(task);
+      //remove it from our global
+      if (index > -1) {
+        context.tasks.splice(index, 1);
+      }
+      //trash task
+      task = null;
+      updateList();
+      };
 
     return element;
 }
@@ -93,15 +106,26 @@ function appendList(element){
   context.listElement.appendChild(element);
 }
 
+//empties tasks then dumps it to cookie to wipe it too. updates the DOM
 function emptyAll(){
-  document.cookie = null;
   context.tasks = [];
+  document.cookie = dump(context.tasks);
   updateList();
 }
 
+//resets all tasks to false. updates the dom
+function reset(){
+  for (let each in context.tasks){
+    context.tasks[each].state = false;
+  }
+  updateList();
+}
+
+//grabs cookie info
 context.tasks = grab(document.cookie);
 //console.log(context.tasks);
 if (!context.tasks) {
   context.tasks = [];
 }
+
 updateList();
