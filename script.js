@@ -23,7 +23,7 @@ context.tasks = taskList;
 //get a date object to keep track of time
 context.currentDate = new Date;
 //populate lastDate
-context.lastDate = context.currentDate
+context.lastDate = Date.now();
 context.clock = document.getElementById("clock");
 
 
@@ -112,17 +112,41 @@ function update(){
 function clock(){
   context.currentDate = new Date();
   context.clock.textContent = context.currentDate.toLocaleTimeString();
-  if (context.currentDate.getDay()!= context.lastDate.getDay()) {
-    context.lastDate = context.currentDate;
-    resetTasks();
+  try
+  {
+    if (context.currentDate.getDay()!= context.lastDate.getDay()) {
+      context.lastDate = context.currentDate;
+      resetTasks();
+    }
+  }
+  catch(e){
   }
 }
 
+function dump(){
+  document.cookie = JSON.stringify(context);
+  console.log(document.cookie);
+}
 
-//populate HTML
+function grab(){
+  context = JSON.parse(document.cookie);
+  context.lastDate = new Date(context.lastDate);
+  //populate HTML
+  for (let each in context.tasks) {
+    createTask(context.tasks[each]);
+  }
+  //I have to do this because the parse is trashing my element link in clock for some reason
+  context.clock = document.getElementById("clock");
+  
+//  console.log(context.tasks[0].checkbox);
+//  console.log(context.tasks[1].checkbox);
+  
+}
+
+/*//populate HTML
 for (let each in context.tasks) {
   createTask(context.tasks[each]);
-}
+}*/
 
 //update current date every second
 setInterval(clock,1000);
