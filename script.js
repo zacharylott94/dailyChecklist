@@ -1,7 +1,22 @@
 //global context object for holding our precious data
 let context = {};
 
-context.tasks = [];
+let taskList = []
+
+//bogus test data
+taskList.push({
+  text: "a nisi praesentibus",
+  state: false,
+  element: "",
+  checkbox: ""
+          });
+taskList.push({
+  text: "voluptatibus si aut",
+  state: false,
+  element: "",
+  checkbox: ""
+          });
+context.tasks = taskList;
 //taskList should not be referred to past this point
 //refer to context.tasks instead
 
@@ -12,12 +27,7 @@ context.lastDate = Date.now();
 context.clock = document.getElementById("clock");
 
 
-//this function takes an object
 function createTask(task) {
-  /*if no task, assume the user is creating one and grab the input element*/
-  task = task || {text:document.getElementById("input").value,
-                 state:false};
-  
   
   /*Define stuff
     1. list is our <main> with id="list"
@@ -35,7 +45,6 @@ function createTask(task) {
   span.textContent = task.text;
   let del = document.createElement("button");
   del.textContent = "D";
-  
   
   check.onclick = () => {
     
@@ -68,7 +77,6 @@ function createTask(task) {
     list.removeChild(task.element);
     //trash task
     task = null;
-    dump();
   }
   
   /*Chain everything together*/
@@ -76,7 +84,13 @@ function createTask(task) {
   task.element.appendChild(span);
   task.element.appendChild(del);
   list.appendChild(task.element);
-  context.tasks.push(task)
+}
+
+function nextDay(current, last) {
+  if (current != last) {
+    last = current;
+    resetTasks(context.tasks);
+  }
 }
 
 function resetTasks() {
@@ -110,7 +124,6 @@ function clock(){
 }
 
 function dump(){
-  document.cookie = null;
   document.cookie = JSON.stringify(context);
   console.log(document.cookie);
 }
@@ -125,16 +138,15 @@ function grab(){
   //I have to do this because the parse is trashing my element link in clock for some reason
   context.clock = document.getElementById("clock");
   
-
+//  console.log(context.tasks[0].checkbox);
+//  console.log(context.tasks[1].checkbox);
   
 }
 
-function emptyTasks(){
-  context.tasks = [];
-  document.cookie = JSON.stringify(context);
-}
-grab()
+/*//populate HTML
+for (let each in context.tasks) {
+  createTask(context.tasks[each]);
+}*/
 
 //update current date every second
 setInterval(clock,1000);
-
