@@ -16,10 +16,12 @@ function task(text) {
   let del = document.createElement("button");
   del.textContent = "D";
   
-  check.onclick = (self) => {
-    self.state = !self.state;
-    if self.state {self.textContent = "1"}
-    else {self.textContent = "0"};
+  check.onclick = () => {
+    console.log("You pushed the checkbox!");
+  }
+  
+  del.onclick = () => {
+    console.log("You pushed the delete button!");
   }
   
   /*Chain everything together*/
