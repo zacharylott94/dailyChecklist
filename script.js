@@ -8,20 +8,28 @@ context.listElement = document.getElementById("list");
 context.inputElement = document.getElementById("input");
 
 //syncs context with the document. doesn't return
-function updateDoc(){
+function updateList(){
   
   function buildTaskElement(task){
-  let check = document.createElement("button");
-  let del = document.createElement("button");
-  let span = document.createElement("span");
-  span.textContent = task.text;
-  check.textContent = "false";
-  del.textContent = "delete";
-  let element = document.createElement("div");
-  element.appendChild(check);
-  element.appendChild(span);
-  element.appendChild(del);
-  return element;
+    let check = document.createElement("button");
+    let del = document.createElement("button");
+    let span = document.createElement("span");
+    span.textContent = task.text;
+    check.textContent = task.state;
+    del.textContent = "delete";
+    let element = document.createElement("div");
+    element.appendChild(check);
+    element.appendChild(span);
+    element.appendChild(del);
+      
+    check.onclick = () =>{
+      console.log("Was",task.state)
+      task.state = !task.state
+      updateList();
+      console.log("Now", task.state)
+    };
+
+    return element;
 }
   
   context.listElement.innerHTML = "";
@@ -37,7 +45,7 @@ function clock(){}
 //compares current and last times, returns bool
 function nextday(){}
 
-//takes text. If no text, takes text from context.inputElement returns an object
+//takes text from context.inputElement, shoves object into context.tasks. No return, updates List.
 function createTask(input){
   input = input || context.inputElement
   console.log(input);
@@ -49,7 +57,8 @@ function createTask(input){
   input.value = "";
   //give our object a state
   task.state = false;
-  return task;
+  context.tasks.push(task);
+  updateList();
 }
 
 //takes a task object, and builds the DOM elements for it.
@@ -79,14 +88,5 @@ function appendList(element){
   context.listElement.appendChild(element);
 }
 
-let test = createTask({value:"test"});
-context.tasks.push(test);
-let test2 = createTask({value:"test2"});
-context.tasks.push(test2);
 
-updateDoc();
-//updates stuff
-setInterval(() =>{
-  clock();
-  updateDoc();
-}, 100);
+updateList();
