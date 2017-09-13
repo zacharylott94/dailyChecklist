@@ -1,4 +1,19 @@
-function task(text) {
+let data = []
+
+//bogus test data
+data.push({
+  text: "a nisi praesentibus",
+  state: false,
+  element: ""
+          });
+data.push({
+  text: "voluptatibus si aut",
+  state: false,
+  element: ""
+          });
+
+
+function createTask(task) {
   
   /*Define stuff
     1. list is our <main> with id="list"
@@ -7,17 +22,19 @@ function task(text) {
     4. span is where our text goes
     5. del is our delete button*/
   let list = document.getElementById("list");
-  let task = document.createElement("div");
+  task.element = document.createElement("div");
   let check = document.createElement("button");
   check.state = false;
   check.textContent = "0";
   let span = document.createElement("span");
-  span.textContent = text;
+  span.textContent = task.text;
   let del = document.createElement("button");
   del.textContent = "D";
   
   check.onclick = () => {
-    console.log("You pushed the checkbox!");
+    console.log("state for \"" + task.text + "\" was " + task.state);
+    task.state = !task.state;
+    console.log("it is now " + task.state);
   }
   
   del.onclick = () => {
@@ -25,12 +42,13 @@ function task(text) {
   }
   
   /*Chain everything together*/
-  task.appendChild(check);
-  task.appendChild(span);
-  task.appendChild(del);
-  list.appendChild(task);
+  task.element.appendChild(check);
+  task.element.appendChild(span);
+  task.element.appendChild(del);
+  list.appendChild(task.element);
 }
 
-task("voluptatibus nam proident");
-task("e arbitrantur nostrud");
-task("si et senserit");
+//populate HTML
+for (let each in data) {
+  createTask(data[each]);
+}
