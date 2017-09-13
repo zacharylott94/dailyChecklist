@@ -39,6 +39,18 @@ function createTask(task) {
   
   del.onclick = () => {
     console.log("You pushed the delete button!");
+    //grab the index of the task
+    let index = data.indexOf(task);
+    //remove it from our global
+    if (index > -1) {
+      data.splice(index, 1);
+    }
+    //testing stuff here
+    console.log(data);
+    //remove the dom element of task from the list
+    list.removeChild(task.element);
+    //trash task
+    task = null;
   }
   
   /*Chain everything together*/
