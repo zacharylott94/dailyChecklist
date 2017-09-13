@@ -7,12 +7,14 @@ let taskList = []
 taskList.push({
   text: "a nisi praesentibus",
   state: false,
-  element: ""
+  element: "",
+  checkbox: ""
           });
 taskList.push({
   text: "voluptatibus si aut",
   state: false,
-  element: ""
+  element: "",
+  checkbox: ""
           });
 context.tasks = taskList;
 //taskList should not be referred to past this point
@@ -37,6 +39,7 @@ function createTask(task) {
   let check = document.createElement("button");
   check.state = false;
   check.textContent = "false";
+  task.checkbox = check;
   let span = document.createElement("span");
   span.textContent = task.text;
   let del = document.createElement("button");
@@ -53,7 +56,7 @@ function createTask(task) {
     console.log("it is now " + task.state);
     
     //update button text
-    check.textContent = task.state;
+    update();
     
     //testing stuff here
     console.log(context.tasks);
@@ -94,9 +97,16 @@ function resetTasks() {
   for (let each in context.tasks) {
     context.tasks[each].state = false;
   }
+  update();
   console.log(context.tasks);
+  
 }
 
+function update(){
+  for (let each in context.tasks){
+    context.tasks[each].checkbox.textContent = context.tasks[each].state;
+  }
+}
 
 //populate HTML
 for (let each in context.tasks) {
