@@ -37,6 +37,7 @@ function updateList(){
   for(let each in context.tasks){
     context.listElement.appendChild(buildTaskElement(context.tasks[each]));
   }
+  document.cookie = dump(context.tasks);
 }
 
 //keeps time. Doesn't return, calls update
@@ -78,15 +79,29 @@ function buildTaskElement(task){
 }
 
 //grabs cookie, returns object
-function grab(cookie){}
+function grab(cookie){
+  return JSON.parse(cookie);
+}
 
 //dumps context object. returns string
-function dump(){}
+function dump(object){
+  return JSON.stringify(object);
+}
 
 //takes an element and appends it to the list
 function appendList(element){
   context.listElement.appendChild(element);
 }
 
+function emptyAll(){
+  document.cookie = null;
+  context.tasks = [];
+  updateList();
+}
 
+context.tasks = grab(document.cookie);
+//console.log(context.tasks);
+if (!context.tasks) {
+  context.tasks = [];
+}
 updateList();
