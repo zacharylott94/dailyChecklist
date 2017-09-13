@@ -1,0 +1,36 @@
+Daily Checklist
+* In HTML
+* Keeps track of midnight/last day
+* Separate file for saving the list
+* If needed, a separate file for settings
+* Checkbox button
+* Delete button
+* Add task button
+* embed JS/CSS
+* allow typing
+
+File setup
+{
+  "task1":"["task description", "bool"]",
+  "task2":"["task description", "true"]",
+  "task3":"["task description", "false"]",
+}
+
+code walkthrough
+
+* On startup, check for files
+  + if files, open
+  - else, create files
+* Parse files and populate HTML
+* if nextday(), set all tasks to false
+* [IDLE] enter idle, accept input
+* if checkbox button clicked, toggle state of task
+  + update file
+* if delete button clicked, delete task
+  + update file
+* if add task button clicked
+  + add a new div
+  + populate
+  + update file
+* if nextday(), set tasks to false
+* GOTO IDLE
