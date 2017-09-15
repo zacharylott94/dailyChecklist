@@ -19,6 +19,7 @@ context.inputElement.addEventListener("keyup", (event) =>{
     createTask();
   }
 });
+
 updateList();
 
 nextDay()
