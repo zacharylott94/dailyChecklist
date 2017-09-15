@@ -28,7 +28,7 @@ function updateList(){
       updateList();
       console.log("Now", task.state)
     };
-
+    
     return element;
 }
   
@@ -37,7 +37,7 @@ function updateList(){
   for(let each in context.tasks){
     context.listElement.appendChild(buildTaskElement(context.tasks[each]));
   }
-  document.cookie = dump(context.tasks);
+  set("tasks", JSON.stringify(context.tasks));
 }
 
 //keeps time. Doesn't return, calls update
@@ -62,31 +62,27 @@ function createTask(input){
   updateList();
 }
 
-//takes a task object, and builds the DOM elements for it.
-//returns object with .element for DOM
-function buildTaskElement(task){
-  let check = document.createElement("button");
-  let del = document.createElement("button");
-  let span = document.createElement("span");
-  span.textContent = task.text;
-  check.textContent = "false";
-  del.textContent = "delete";
-  let element = document.createElement("div");
-  element.appendChild(check);
-  element.appendChild(span);
-  element.appendChild(del);
-  return element;
+
+//sets a value in localStorage
+//accepts strings, doesn't return
+function set(key, value){
+  console.log("set "+ key, value);
+  window.localStorage.setItem(key,value);
 }
 
-//grabs cookie, returns object
-function grab(cookie){
-  return JSON.parse(cookie);
+//gets a value in localStorage
+//accepts string, returns string
+function get(key){
+  console.log("get "+ key);
+  return window.localStorage.getItem(key);
 }
 
-//dumps context object. returns string
-function dump(object){
-  return JSON.stringify(object);
+//empties a value in localStorage
+function clear(key){
+  window.localStorage.removeItem(key);
 }
+
+
 
 //takes an element and appends it to the list
 function appendList(element){
@@ -94,12 +90,12 @@ function appendList(element){
 }
 
 function emptyAll(){
-  document.cookie = null;
+  clear("tasks");
   context.tasks = [];
   updateList();
 }
 
-context.tasks = grab(document.cookie);
+context.tasks = JSON.parse(get("tasks"));
 //console.log(context.tasks);
 if (!context.tasks) {
   context.tasks = [];
