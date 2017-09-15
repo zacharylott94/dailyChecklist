@@ -1,15 +1,12 @@
 //global context
-let context = {};
-context.tasks = [];
-context.currentTime = 0;
-context.lastTime = 0;
-context.clockElement = document.getElementById("clock");
-context.listElement = document.getElementById("list");
-context.inputElement = document.getElementById("input");
+let context = {
+  tasks: JSON.parse(get("tasks")),
+  lastTime: 0,
+  clockElement: document.getElementById("clock"),
+  listElement: document.getElementById("list"),
+  inputElement: document.getElementById("input")
+};
 
-
-context.tasks = JSON.parse(get("tasks"));
-//console.log(context.tasks);
 if (!context.tasks) {
   context.tasks = [];
 }
@@ -32,14 +29,11 @@ function updateList(){
     element.appendChild(del);
       
     check.onclick = () =>{
-      console.log("Was",task.state)
       task.state = !task.state
       updateList();
-      console.log("Now", task.state)
     };
     
     del.onclick = () => {
-      console.log("You pushed the delete button!");
       //grab the index of the task
       let index = context.tasks.indexOf(task);
       //remove it from our global
@@ -62,7 +56,7 @@ function updateList(){
   set("tasks", JSON.stringify(context.tasks));
 }
 
-//keeps time. Doesn't return, calls update
+//keeps time. Doesn't return
 function clock(){}
 
 //compares current and last times, returns bool
@@ -71,7 +65,6 @@ function nextday(){}
 //takes text from context.inputElement, shoves object into context.tasks. No return, updates List.
 function createTask(input){
   input = input || context.inputElement
-  console.log(input);
   //create an empty object
   let task = {};
   //throw in the text from our input box
@@ -88,14 +81,12 @@ function createTask(input){
 //sets a value in localStorage
 //accepts strings, doesn't return
 function set(key, value){
-  console.log("set "+ key, value);
   window.localStorage.setItem(key,value);
 }
 
 //gets a value in localStorage
 //accepts string, returns string
 function get(key){
-  console.log("get "+ key);
   return window.localStorage.getItem(key);
 }
 
@@ -104,13 +95,14 @@ function clear(key){
   window.localStorage.removeItem(key);
 }
 
-
-function emptyAll(){
+//empties the list
+function empty(){
   clear("tasks");
   context.tasks = [];
   updateList();
 }
 
+//resets all tasks to false
 function reset(){
   for (let each in context.tasks){
     context.tasks[each].state = false;
