@@ -1,7 +1,7 @@
 //global context
 let context = {
   tasks: JSON.parse(get("tasks")),
-  lastTime: 0,
+  lastTime: Number(get("lastTime")),
   clockElement: document.getElementById("clock"),
   listElement: document.getElementById("list"),
   inputElement: document.getElementById("input")
@@ -19,12 +19,12 @@ context.inputElement.addEventListener("keyup", (event) =>{
     createTask();
   }
 });
-
-
-
 updateList();
 
+nextDay()
+setInterval(nextDay,10000);
 
+/*-----------------functions only below this point----------------------------------*/
 //syncs context with the document. doesn't return
 function updateList(){
   
@@ -70,8 +70,15 @@ function updateList(){
 //keeps time. Doesn't return
 function clock(){}
 
-//compares current and last times, returns bool
-function nextday(){}
+//compares current and last times, resets if they don't match
+function nextDay(){
+  let day = new Date().getDay();
+  if (context.lastTime != day) {
+    reset();
+    context.lastTime = day;
+    set("lastTime", String(context.lastTime));
+  }
+}
 
 //takes text from context.inputElement, shoves object into context.tasks. No return, updates List.
 function createTask(input){
@@ -120,3 +127,4 @@ function reset(){
   }
   updateList();
 }
+
