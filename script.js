@@ -7,6 +7,15 @@ context.clockElement = document.getElementById("clock");
 context.listElement = document.getElementById("list");
 context.inputElement = document.getElementById("input");
 
+
+context.tasks = JSON.parse(get("tasks"));
+//console.log(context.tasks);
+if (!context.tasks) {
+  context.tasks = [];
+}
+updateList();
+
+
 //syncs context with the document. doesn't return
 function updateList(){
   
@@ -28,6 +37,19 @@ function updateList(){
       updateList();
       console.log("Now", task.state)
     };
+    
+    del.onclick = () => {
+      console.log("You pushed the delete button!");
+      //grab the index of the task
+      let index = context.tasks.indexOf(task);
+      //remove it from our global
+      if (index > -1) {
+        context.tasks.splice(index, 1);
+      }
+      //trash task
+      task = null;
+      updateList();
+    }
     
     return element;
 }
@@ -83,21 +105,15 @@ function clear(key){
 }
 
 
-
-//takes an element and appends it to the list
-function appendList(element){
-  context.listElement.appendChild(element);
-}
-
 function emptyAll(){
   clear("tasks");
   context.tasks = [];
   updateList();
 }
 
-context.tasks = JSON.parse(get("tasks"));
-//console.log(context.tasks);
-if (!context.tasks) {
-  context.tasks = [];
+function reset(){
+  for (let each in context.tasks){
+    context.tasks[each].state = false;
+  }
+  updateList();
 }
-updateList();
