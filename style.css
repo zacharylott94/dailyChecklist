@@ -1,0 +1,54 @@
+html {
+  text-align: center;
+}
+
+#list {
+  margin-bottom: 15px;
+   vertical-align: middle;
+}
+
+.task {
+  margin-bottom: 15px;
+  display: grid;
+  grid-template-columns:  1fr 50px;
+  grid-auto-rows:  50px 50px;
+ 
+  
+}
+
+.task > div{
+  display: inline-block;
+  vertical-align: middle;
+  line-height: normal;
+  border-style: outset;
+  border-radius: 6px;
+}
+
+.task > button {
+  background: rgb(200,100,100);
+  border-color: rgb(230,130,130);
+  border-radius: 6px;
+  font-size: 2em;
+  color: darkred;
+}
+
+button {
+  margin: 5px;
+}
+
+.lb {
+  min-height: 25px;
+/*  background-color: red;*/
+}
+
+h1{
+  margin-bottom: 0px;
+}
+
+.true {
+  background-color: greenyellow;
+  border-color: rgb(100,200,100);
+}
+.false {
+  border-color: lightgray;
+}

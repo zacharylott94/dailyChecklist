@@ -29,18 +29,17 @@ updateList();
 function updateList(){
   
   function buildTaskElement(task){
-    let check = document.createElement("button");
     let del = document.createElement("button");
-    let span = document.createElement("span");
-    span.textContent = task.text;
-    check.textContent = task.state;
-    del.textContent = "delete";
+    let text = document.createElement("div");
+    text.textContent = task.text;
+    text.className = String(task.state);
+    del.textContent = "X";
     let element = document.createElement("div");
-    element.appendChild(check);
-    element.appendChild(span);
+    element.appendChild(text);
     element.appendChild(del);
+    element.className = "task"
       
-    check.onclick = () =>{
+    text.onclick = () =>{
       task.state = !task.state
       updateList();
     };
