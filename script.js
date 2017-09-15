@@ -10,6 +10,18 @@ let context = {
 if (!context.tasks) {
   context.tasks = [];
 }
+
+//add event listener to input so enter key creates task
+//stolen from https://stackoverflow.com/a/155263
+context.inputElement.addEventListener("keyup", (event) =>{
+  event.preventDefault();
+  if (event.keyCode == 13) {
+    createTask();
+  }
+});
+
+
+
 updateList();
 
 
