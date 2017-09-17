@@ -15,7 +15,7 @@ if (!context.tasks) {
 //stolen from https://stackoverflow.com/a/155263
 context.inputElement.addEventListener("keyup", (event) =>{
   event.preventDefault();
-  if (event.keyCode == 13) {
+  if (event.keyCode === 13) {
     createTask();
   }
 });
@@ -74,7 +74,7 @@ function clock(){}
 //compares current and last times, resets if they don't match
 function nextDay(){
   let day = new Date().getDay();
-  if (context.lastTime != day) {
+  if (context.lastTime !== day) {
     reset();
     context.lastTime = day;
     set("lastTime", String(context.lastTime));
