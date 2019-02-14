@@ -11,13 +11,19 @@
 
   <body>
     <header>
-      Daily Checklist <button onclick="resetTasks()">reset!</button><button onclick="dump()">dump!</button>
-      <span id="clock"></span><button onclick="grab()">grab!</button>
-      <span id="clock"></span>
+      <h1>Daily Checklist</h1> 
+      <br>
+      
+      <button onclick="reset()">reset!</button><button onclick="empty()">empty!</button>
+      
+      <div><button onclick="createTask()">Add Task</button><input id="input"></div>
+      
+      <div class="lb"></div>
     </header>
 
     <div id="list">
     </div>
+    
 
     <footer>
       Made by Zachary Lott

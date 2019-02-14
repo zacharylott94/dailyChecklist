@@ -1,152 +1,131 @@
-//global context object for holding our precious data
-let context = {};
+//global context
+let context = {
+  tasks: JSON.parse(get("tasks")),
+  lastTime: Number(get("lastTime")),
+  clockElement: document.getElementById("clock"),
+  listElement: document.getElementById("list"),
+  inputElement: document.getElementById("input")
+};
 
-let taskList = []
+if (!context.tasks) {
+  context.tasks = [];
+}
 
-//bogus test data
-taskList.push({
-  text: "a nisi praesentibus",
-  state: false,
-  element: "",
-  checkbox: ""
-          });
-taskList.push({
-  text: "voluptatibus si aut",
-  state: false,
-  element: "",
-  checkbox: ""
-          });
-context.tasks = taskList;
-//taskList should not be referred to past this point
-//refer to context.tasks instead
-
-//get a date object to keep track of time
-context.currentDate = new Date;
-//populate lastDate
-context.lastDate = Date.now();
-context.clock = document.getElementById("clock");
-
-
-function createTask(task) {
-  
-  /*Define stuff
-    1. list is our <main> with id="list"
-    2. task is the line that spells out the task and has buttons
-    3. check is our checkbox button
-    4. span is where our text goes
-    5. del is our delete button*/
-  let list = document.getElementById("list");
-  task.element = document.createElement("div");
-  let check = document.createElement("button");
-  check.state = false;
-  check.textContent = "false";
-  task.checkbox = check;
-  let span = document.createElement("span");
-  span.textContent = task.text;
-  let del = document.createElement("button");
-  del.textContent = "D";
-  
-  check.onclick = () => {
-    
-    
-    console.log("state for \"" + task.text + "\" was " + task.state);
-    
-    //flip state
-    task.state = !task.state;
-    
-    console.log("it is now " + task.state);
-    
-    //update button text
-    update();
-    
-    //testing stuff here
-    console.log(context.tasks);
+//add event listener to input so enter key creates task
+//stolen from https://stackoverflow.com/a/155263
+context.inputElement.addEventListener("keyup", (event) =>{
+  event.preventDefault();
+  if (event.keyCode === 13) {
+    createTask();
   }
+});
+
+updateList();
+
+nextDay()
+setInterval(nextDay,10000);
+
+/*-----------------functions only below this point----------------------------------*/
+//syncs context with the document. doesn't return
+function updateList(){
   
-  del.onclick = () => {
-    console.log("You pushed the delete button!");
-    //grab the index of the task
-    let index = context.tasks.indexOf(task);
-    //remove it from our global
-    if (index > -1) {
-      context.tasks.splice(index, 1);
+  function buildTaskElement(task){
+    let del = document.createElement("button");
+    let text = document.createElement("div");
+    text.textContent = task.text;
+    text.className = String(task.state);
+    del.textContent = "X";
+    let element = document.createElement("div");
+    element.appendChild(text);
+    element.appendChild(del);
+    element.className = "task"
+      
+    text.onclick = () =>{
+      task.state = !task.state
+      updateList();
+    };
+    
+    del.onclick = () => {
+      //grab the index of the task
+      let index = context.tasks.indexOf(task);
+      //remove it from our global
+      if (index > -1) {
+        context.tasks.splice(index, 1);
+      }
+      //trash task
+      task = null;
+      updateList();
     }
-    //testing stuff here
-    console.log(context.tasks);
-    //remove the dom element of task from the list
-    list.removeChild(task.element);
-    //trash task
-    task = null;
-  }
+    
+    return element;
+}
   
-  /*Chain everything together*/
-  task.element.appendChild(check);
-  task.element.appendChild(span);
-  task.element.appendChild(del);
-  list.appendChild(task.element);
+  context.listElement.innerHTML = "";
+  
+  for(let each in context.tasks){
+    context.listElement.appendChild(buildTaskElement(context.tasks[each]));
+  }
+  set("tasks", JSON.stringify(context.tasks));
 }
 
-function nextDay(current, last) {
-  if (current != last) {
-    last = current;
-    resetTasks(context.tasks);
+//keeps time. Doesn't return
+function clock(){}
+
+//compares current and last times, resets if they don't match
+function nextDay(){
+  let day = new Date().getDay();
+  if (context.lastTime !== day) {
+    reset();
+    context.lastTime = day;
+    set("lastTime", String(context.lastTime));
   }
 }
 
-function resetTasks() {
-  console.log("tasks resetting")
-  for (let each in context.tasks) {
+//takes text from context.inputElement, shoves object into context.tasks. No return, updates List.
+function createTask(input){
+  input = input || context.inputElement
+  //create an empty object
+  let task = {};
+  //throw in the text from our input box
+  task.text = input.value;
+  //set input box to empty
+  input.value = "";
+  //give our object a state
+  task.state = false;
+  context.tasks.push(task);
+  updateList();
+}
+
+
+//sets a value in localStorage
+//accepts strings, doesn't return
+function set(key, value){
+  window.localStorage.setItem(key,value);
+}
+
+//gets a value in localStorage
+//accepts string, returns string
+function get(key){
+  return window.localStorage.getItem(key);
+}
+
+//empties a value in localStorage
+function clear(key){
+  window.localStorage.removeItem(key);
+}
+
+//empties the list
+function empty(){
+  clear("tasks");
+  context.tasks = [];
+  updateList();
+}
+
+//resets all tasks to false
+function reset(){
+  for (let each in context.tasks){
     context.tasks[each].state = false;
   }
-  update();
-  console.log(context.tasks);
-  
+  updateList();
 }
 
-function update(){
-  for (let each in context.tasks){
-    context.tasks[each].checkbox.textContent = context.tasks[each].state;
-  }
-}
-
-function clock(){
-  context.currentDate = new Date();
-  context.clock.textContent = context.currentDate.toLocaleTimeString();
-  try
-  {
-    if (context.currentDate.getDay()!= context.lastDate.getDay()) {
-      context.lastDate = context.currentDate;
-      resetTasks();
-    }
-  }
-  catch(e){
-  }
-}
-
-function dump(){
-  document.cookie = JSON.stringify(context);
-  console.log(document.cookie);
-}
-
-function grab(){
-  context = JSON.parse(document.cookie);
-  context.lastDate = new Date(context.lastDate);
-  //populate HTML
-  for (let each in context.tasks) {
-    createTask(context.tasks[each]);
-  }
-  //I have to do this because the parse is trashing my element link in clock for some reason
-  context.clock = document.getElementById("clock");
-  
-//  console.log(context.tasks[0].checkbox);
-//  console.log(context.tasks[1].checkbox);
-  
-}
-
-/*//populate HTML
-for (let each in context.tasks) {
-  createTask(context.tasks[each]);
-}*/
-
-//update current date every second
-setInterval(clock,1000);
